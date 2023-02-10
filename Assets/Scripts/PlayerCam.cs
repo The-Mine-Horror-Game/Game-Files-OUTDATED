@@ -23,21 +23,23 @@ public class PlayerCam : MonoBehaviour
         Cursor.visible = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         // get mouse input
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
 
+        // Just trust this is how unity works, it's weird but that's how it is
         yRotation += mouseX;
 
         xRotation -= mouseY;
+        
+        // Stops the camera from rotating more than 90 degreed up or down
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
 
 
-        // rotate cam and orientation
+        // rotate cam and orientation, currently only half functional, doesn't actually move the camera only rotates it
         if (Input.GetKey(KeyCode.Q))
         {
             isLeaning = true;

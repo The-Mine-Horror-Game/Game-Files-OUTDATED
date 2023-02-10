@@ -9,6 +9,7 @@ public class MoveCamera : MonoBehaviour
 
     void Update()
     {
+        // Keeps the camera glued to the player
         transform.position = cameraPosition.position;
     }
 }

@@ -57,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void MyInput()
     {
+        // Get horizontal and "vertical" inputs (wasd) for later use
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
     }
@@ -66,13 +67,13 @@ public class PlayerMovement : MonoBehaviour
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
+        // Add force in that direction
         rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
     }
 
     private void SpeedControl()
     {
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        //Debug.Log(flatVel.magnitude);
 
         // limit velocity if needed
         if (flatVel.magnitude > moveSpeed)
