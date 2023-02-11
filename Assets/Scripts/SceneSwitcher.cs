@@ -15,14 +15,14 @@ public class SceneSwitcher : MonoBehaviour
 
     [Header("Reference")]
     public Object sceneToLoad;  // holds the scene that the box would load
-    public Object player;
+    public Object player;       // holds the player
 
 
     // when something collides with the box
     private void OnTriggerEnter(Collider other)
     {
 
-        // if its the player, load the next scene and add the player to the scene (currently spawns at 0, 0, 0)
+        // if its the player, load the next scene and doesnt remove the player
         if (other.tag == "Player") 
         {
             SceneManager.LoadScene(sceneToLoad.name, LoadSceneMode.Single); 
