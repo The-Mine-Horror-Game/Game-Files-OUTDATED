@@ -15,8 +15,8 @@ public class PlayerMovement : MonoBehaviour
     bool grounded;
 
     public Transform orientation;
-
-
+    public Transform cameraPosition;
+    public KeyCode crouchKey;
 
     float horizontalInput;
     float verticalInput;
@@ -39,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
 
         MyInput();
         SpeedControl();
+        CrouchCheck();
 
         // handle drag
         if (grounded)
@@ -80,6 +81,22 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+        }
+    }
+
+    private void CrouchCheck()
+    {
+        if (Input.GetKeyDown(crouchKey))
+        {
+            Vector3 temp = new Vector3(cameraPosition.position.x, -playerHeight/2, cameraPosition.position.z);
+
+            cameraPosition.position = Vector3.Lerp(cameraPosition.position, temp, Time.deltaTime * 5);
+        }
+        else if (Input.GetKeyUp(crouchKey))
+        {
+            Vector3 temp = new Vector3(cameraPosition.position.x, playerHeight/2, cameraPosition.position.z);
+
+            cameraPosition.position = Vector3.Lerp(cameraPosition.position, temp, Time.deltaTime * 5);
         }
     }
 }
