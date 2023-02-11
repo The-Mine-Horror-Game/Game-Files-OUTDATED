@@ -6,7 +6,6 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
     public float moveSpeed;
-
     public float groundDrag;
 
     [Header("Ground Check")]
@@ -14,12 +13,23 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask whatIsGround;
     bool grounded;
 
+    [Header("Camera Things")]
     public Transform orientation;
     public Transform cameraPosition;
+
+    [Header("Crouching")]
+    [SerializeField] private float timeToCrouch = 0.25f;
+    [SerializeField] private Vector3 crouchPosition = new Vector3(0, -0.5f, 0);
+    [SerializeField] private Vector3 standPosition = new Vector3(0, 0, 0);
+    [SerializeField] private Quaternion playerRotation = new Quaternion();
     public KeyCode crouchKey;
 
-    float horizontalInput;
-    float verticalInput;
+    private bool duringCrouchAnimation = false;
+    public bool isCrouching = false;
+
+
+    private float horizontalInput;
+    private float verticalInput;
 
     Vector3 moveDirection;
 
@@ -98,5 +108,20 @@ public class PlayerMovement : MonoBehaviour
 
             cameraPosition.position = Vector3.Lerp(cameraPosition.position, temp, Time.deltaTime * 5);
         }
+    }
+
+    
+    private IEnumerator CrouchStand()
+    {
+        duringCrouchAnimation = true;
+
+        float timeElapsed = 0;
+        Vector3 targetPosition = isCrouching ? standPosition : crouchPosition;
+
+        yield return null;
+
+        isCrouching = !isCrouching;
+
+        duringCrouchAnimation = false;
     }
 }

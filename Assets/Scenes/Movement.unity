@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -640,7 +640,12 @@ MonoBehaviour:
     m_Bits: 1
   orientation: {fileID: 789901463}
   cameraPosition: {fileID: 1924898363}
+  timeToCrouch: 0
+  crouchPosition: {x: 0, y: -0.5, z: 0}
+  standPosition: {x: 0, y: 0, z: 0}
+  playerRotation: {x: 0, y: 0, z: 0, w: 0}
   crouchKey: 306
+  isCrouching: 0
 --- !u!54 &1062943276
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1043,6 +1048,7 @@ MonoBehaviour:
   isLeaning: 0
   orientation: {fileID: 789901463}
   cameraPivotTransform: {fileID: 350712067}
+  playerRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!81 &1924898365
 AudioListener:
   m_ObjectHideFlags: 0

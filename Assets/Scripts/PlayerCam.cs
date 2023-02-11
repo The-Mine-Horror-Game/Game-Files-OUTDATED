@@ -14,6 +14,8 @@ public class PlayerCam : MonoBehaviour
     public Transform orientation;
     public Transform cameraPivotTransform;
 
+    [SerializeField] private Quaternion playerRotation = new Quaternion();
+
     float xRotation;
     float yRotation;
 
@@ -25,6 +27,7 @@ public class PlayerCam : MonoBehaviour
 
     void Update()
     {
+        playerRotation = transform.rotation;
         // get mouse input
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
@@ -64,9 +67,10 @@ public class PlayerCam : MonoBehaviour
             isLeaning = false;
             orientation.rotation = Quaternion.Euler(0, yRotation, 0);
             Quaternion newRot = Quaternion.Euler(xRotation, yRotation, 0);
-            transform.rotation = Quaternion.Slerp(transform.localRotation, newRot, Time.deltaTime * slerpSensLean);
+            transform.rotation = Quaternion.Slerp(transform.localRotation, newRot, 0.01f);
 
-
+            //Time.deltaTime* slerpSensLean)
+            
             //transform.position += Vector3.right * sensXDistance;
             //transform.position += Vector3.up * sensYDistance;
 
