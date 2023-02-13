@@ -11,6 +11,7 @@ public class NewPlayerMovement : MonoBehaviour
      Jacob Hubbard
      12/02/23
      */
+
     public bool CanMove { get; private set; } = true;
 
     [Header("Movement Parameters")]
@@ -20,6 +21,8 @@ public class NewPlayerMovement : MonoBehaviour
     public KeyCode backKey = KeyCode.S;
     public KeyCode leftKey = KeyCode.A;
     public KeyCode rightKey = KeyCode.D;
+    private PlayerInput playerInput;
+    private InputActionMap playerInputActionMap;
 
     [Header("Look Parameters")]
     [SerializeField, Range(1, 10)] private float lookSpeedX = 2.0f;
@@ -37,6 +40,7 @@ public class NewPlayerMovement : MonoBehaviour
     void Awake()
     {
 
+        playerInput = GetComponent<PlayerInput>();
         // Sets the camera and character controller, easier than dragging them in the inspector
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
@@ -47,6 +51,8 @@ public class NewPlayerMovement : MonoBehaviour
 
     void Update()
     {
+        //Vector2 inputVector = playerInputManager.
+
         if (CanMove)
         {
             HandleMovementInput();
@@ -59,36 +65,6 @@ public class NewPlayerMovement : MonoBehaviour
     // Handles keyboard inputs
     private void HandleMovementInput()
     {
-        if (Input.GetKey(forwardKey))
-        {
-            currentInput.x = walkSpeed;
-        }
-        if (Input.GetKey(backKey))
-        {
-             currentInput.x = -walkSpeed;
-        }
-        if (Input.GetKey(rightKey))
-        {
-            currentInput.y = walkSpeed;
-        }
-        if (Input.GetKey(leftKey))
-        {
-            currentInput.y = -walkSpeed;
-        }
-
-        if ((Input.GetKey(forwardKey) && Input.GetKey(backKey)) )
-        {
-            currentInput.x = 0;
-        }
-        if ((Input.GetKey(rightKey) && Input.GetKey(leftKey)) )
-        {
-            currentInput.y = 0;
-        }
-
-        //|| !(Input.GetKey(forwardKey) && Input.GetKey(backKey))
-        //|| !(Input.GetKey(rightKey) && Input.GetKey(leftKey))
-
-        
 
         // What the original code used below, doesn't account for different input keys
         currentInput = new Vector2(walkSpeed * Input.GetAxis("Vertical"), walkSpeed * Input.GetAxis("Horizontal"));
@@ -112,5 +88,11 @@ public class NewPlayerMovement : MonoBehaviour
         }
 
         characterController.Move(moveDirection * Time.deltaTime);
+    }
+    
+    public void testThingy()
+    {
+        return;
+
     }
 }
