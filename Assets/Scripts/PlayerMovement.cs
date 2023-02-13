@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    bool grounded;
+    [SerializeField] private bool grounded;
 
     [Header("Camera Things")]
     public Transform orientation;
@@ -68,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void MyInput()
     {
-        // Get horizontal and "vertical" inputs (wasd) for later use
+        // Get horizontal and "vertical" inputs (wasd) for; later use
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
     }

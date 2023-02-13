@@ -67,9 +67,7 @@ public class PlayerCam : MonoBehaviour
             isLeaning = false;
             orientation.rotation = Quaternion.Euler(0, yRotation, 0);
             Quaternion newRot = Quaternion.Euler(xRotation, yRotation, 0);
-            transform.rotation = Quaternion.Slerp(transform.localRotation, newRot, 0.01f);
-
-            //Time.deltaTime* slerpSensLean)
+            transform.rotation = Quaternion.Slerp(transform.localRotation, newRot, Time.deltaTime * slerpSensLean);
             
             //transform.position += Vector3.right * sensXDistance;
             //transform.position += Vector3.up * sensYDistance;
