@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -27,6 +28,9 @@ public class PlayerMovement : MonoBehaviour
     private bool duringCrouchAnimation = false;
     public bool isCrouching = false;
 
+    private PlayerControls playerControls;
+    private PlayerInput playerInput;
+    
 
     private float horizontalInput;
     private float verticalInput;
@@ -39,6 +43,11 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+
+        playerInput = GetComponent<PlayerInput>();
+
+        playerControls = new PlayerControls();
+        playerControls.Player.Enable();
     }
 
     private void Update()

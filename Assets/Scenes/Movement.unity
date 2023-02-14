@@ -798,16 +798,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a829e2636469c4e4eaf1b6bce44bd655, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 3
-  gravity: 30
+  canSprint: 1
+  sprintKey: 304
   forwardKey: 119
   backKey: 115
   leftKey: 97
   rightKey: 100
-  lookSpeedX: 2
-  lookSpeedY: 2
+  walkSpeed: 3
+  sprintSpeed: 6
+  gravity: 30
+  lookSpeedX: 30
+  lookSpeedY: 30
+  leanSens: 20
+  leanSensSlerp: 7
   upperLookLimit: 80
-  lowerLookLimit: 80
+  lowerLookLimit: -80
+  xRotation: 0
+  yRotation: 0
+  orientation: {fileID: 1091624084}
 --- !u!143 &1091624083
 CharacterController:
   m_ObjectHideFlags: 0
@@ -876,35 +884,11 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1091624082}
-        m_TargetAssemblyTypeName: NewPlayerMovement, Assembly-CSharp
-        m_MethodName: testThingy
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 72c4903b-1e63-4578-80b1-7fd3b3000936
     m_ActionName: Player/Flashlight[/Keyboard/f]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 45fdaf14-416d-42e4-894d-ef1194cca980
     m_ActionName: Player/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
