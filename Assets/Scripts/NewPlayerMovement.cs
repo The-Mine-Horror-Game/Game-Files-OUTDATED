@@ -44,7 +44,8 @@ public class NewPlayerMovement : MonoBehaviour
     [SerializeField] private float xRotation;
     [SerializeField] private float yRotation;
     [SerializeField] public bool isLeaning { get; private set; } = false;
-    [SerializeField] private Transform orientation;
+    [SerializeField] private Transform playerObjOrientation;
+    [SerializeField] private Transform leanRotationPoint;
 
     private Camera playerCamera;
     private CharacterController characterController;
@@ -105,24 +106,33 @@ public class NewPlayerMovement : MonoBehaviour
         // Stops the camera from rotating more than 90 degreed up or down
         xRotation = Mathf.Clamp(xRotation, lowerLookLimit, upperLookLimit);
 
-
+        if (playerControls.Player.Lean.inProgress)
+        {
+            //if (playerControls.Player.Lean.WasPerformedThisFrame)
+            //playerControls.Player.Lean.ReadValue<> >= 0
+        }
 
         // rotate cam and orientation, currently only half functional, doesn't actually move the camera only rotates it
-        if (Input.GetKey(KeyCode.Q))
+        if (playerControls.Player.Lean.inProgress)
         {
             isLeaning = true;
-            //transform.rotation = Quaternion.Euler(xRotation, yRotation, sensLean);
-            //transform.rotation = Quaternion.Euler(xRotation, yRotation, transform.localRotation.z + sensLean);
-            //orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+            playerObjOrientation.rotation = Quaternion.Euler(0, yRotation, 0);
+            leanRotationPoint.rotation = Quaternion.Euler(0, yRotation, 0);
+
+            //transform.RotateAround(leanRotationPoint.position, Vector3.back, 30 * Time.deltaTime);
+
             Quaternion newRot = Quaternion.Euler(xRotation, yRotation, leanSens);
             transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * leanSensSlerp);
         }
-        else if (Input.GetKey(KeyCode.E))
+        else if (playerControls.Player.Lean.inProgress)
         {
             isLeaning = true;
-            //transform.rotation = Quaternion.Euler(xRotation, yRotation, - sensLean);
-            //transform.rotation = Quaternion.Euler(xRotation, yRotation, transform.localRotation.z - sensLean);
-            //orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+            playerObjOrientation.rotation = Quaternion.Euler(0, yRotation, 0);
+            leanRotationPoint.rotation = Quaternion.Euler(0, yRotation, 0);
+
+            //transform.RotateAround(leanRotationPoint.position, Vector3.forward, 30 * Time.deltaTime);
+
+            //transform.position = Vector3.Lerp()
 
             Quaternion newRot = Quaternion.Euler(xRotation, yRotation, -leanSens);
             transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * leanSensSlerp);
@@ -130,15 +140,10 @@ public class NewPlayerMovement : MonoBehaviour
         else
         {
             isLeaning = false;
-            //orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+            playerObjOrientation.rotation = Quaternion.Euler(0, yRotation, 0);
+            leanRotationPoint.rotation = Quaternion.Euler(0, yRotation, 0);
             Quaternion newRot = Quaternion.Euler(xRotation, yRotation, 0);
             transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * leanSensSlerp);
-
-            //transform.position += Vector3.right * lookSpeedXDistance;
-            //transform.position += Vector3.up * lookSpeedYDistance;
-
-            //cameraTransform.position = Vector3.MoveTowards(transform.position, leanRightLocation.position, Time.deltaTime * slerpSensLean);
-            //transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         }
     }
 
