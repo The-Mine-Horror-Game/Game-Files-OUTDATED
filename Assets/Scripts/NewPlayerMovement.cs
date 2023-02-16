@@ -13,7 +13,8 @@ public class NewPlayerMovement : MonoBehaviour
      */
 
     public bool CanMove { get; private set; } = true;
-    private bool IsSprinting => canSprint && Input.GetKey(sprintKey);
+    private bool IsSprinting => canSprint && playerControls.Player.Sprint.IsInProgress();
+    private bool ShouldCrouch => playerControls.Player.Crouch.IsInProgress() && !duringCrouchAnimation && characterController.isGrounded;
 
 
     [Header("Functional Options")]
@@ -30,9 +31,19 @@ public class NewPlayerMovement : MonoBehaviour
     [SerializeField] private float walkSpeed = 3.0f;
     [SerializeField] private float sprintSpeed = 6.0f;
     [SerializeField] private float gravity = 30.0f;
-    
+
+    [Header("Crouch Parameters")]
+    [SerializeField] private float crouchHeight = 0.5f;
+    [SerializeField] private float standingHeight = 2f;
+    [SerializeField] private float timeToCrouch = 2f;
+    [SerializeField] private Vector3 crouchingCenter = new Vector3(0, 0.5f, 0);
+    [SerializeField] private Vector3 standingCenter = new Vector3(0, 0, 0);
+    [SerializeField] private Vector3 crouchingScale = new Vector3(1, 0.25f, 1);
+    [SerializeField] private Vector3 standingScale = new Vector3(1, 1, 1);
+    private bool isCrouching;
+    private bool duringCrouchAnimation;
+
     private PlayerControls playerControls;
-    private PlayerInput playerInput;
 
     [Header("Look Parameters")]
     [SerializeField, Range(1, 50)] private float lookSpeedX = 30.0f;
@@ -57,8 +68,6 @@ public class NewPlayerMovement : MonoBehaviour
     {
         playerControls = new PlayerControls();
         playerControls.Player.Enable();
-
-        playerInput = GetComponent<PlayerInput>();
         // Sets the camera and character controller, easier than dragging them in the inspector
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
@@ -74,6 +83,7 @@ public class NewPlayerMovement : MonoBehaviour
         {
             HandleMovementInput();
             HandleMouseLook();
+            HandleCrouch();
 
             ApplyFinalMovements();
         }
@@ -90,6 +100,15 @@ public class NewPlayerMovement : MonoBehaviour
 
         moveDirection = (transform.TransformDirection(Vector3.forward) * currentInput.y) + (transform.TransformDirection(Vector3.right) * currentInput.x);
         moveDirection.y = moveDirectionY;
+    }
+
+    private void HandleCrouch()
+    {
+        if (ShouldCrouch)
+        {
+            StartCoroutine(CrouchStand());
+
+        }
     }
 
     private void HandleMouseLook()
@@ -140,5 +159,38 @@ public class NewPlayerMovement : MonoBehaviour
         }
 
         characterController.Move(moveDirection * Time.deltaTime);
+    }
+
+    private IEnumerator CrouchStand()
+    {
+        duringCrouchAnimation = true;
+
+        float timeElapsed = 0;
+        float targetHeight = isCrouching ? standingHeight : crouchHeight;
+        float currentHeight = characterController.height;
+        Vector3 targetCenter = isCrouching ? standingCenter : crouchingCenter;
+        Vector3 currentCenter = characterController.center;
+        Vector3 targetScale = isCrouching ? standingScale : crouchingScale;
+        Vector3 currentScale = playerObjOrientation.transform.localScale;
+
+        while (timeElapsed < timeToCrouch)
+        {
+            if (isCrouching)
+            {
+                transform.position = new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
+            }
+            characterController.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / timeToCrouch);
+            playerObjOrientation.localScale = Vector3.Lerp(currentScale, targetScale, timeElapsed / timeToCrouch);
+            characterController.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed/timeToCrouch);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        characterController.height = targetHeight;
+        characterController.center = targetCenter;
+
+        isCrouching = !isCrouching;
+
+        duringCrouchAnimation = false;
     }
 }

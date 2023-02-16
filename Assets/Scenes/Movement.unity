@@ -311,7 +311,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -914,6 +914,13 @@ MonoBehaviour:
   walkSpeed: 3
   sprintSpeed: 6
   gravity: 30
+  crouchHeight: 0.5
+  standingHeight: 2
+  timeToCrouch: 0.3
+  crouchingCenter: {x: 0, y: 0.5, z: 0}
+  standingCenter: {x: 0, y: 0, z: 0}
+  crouchingScale: {x: 0, y: 0.25, z: 0}
+  standingScale: {x: 0, y: 2, z: 0}
   lookSpeedX: 30
   lookSpeedY: 30
   leanSens: 35
@@ -1016,6 +1023,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 6ca0c31a-a605-430d-aa48-f0f6c432cca7
     m_ActionName: Player/Lean[/Keyboard/e,/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 60a7359f-f897-4706-9edb-01d9698c7205
+    m_ActionName: Player/Crouch[/Keyboard/leftCtrl]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
