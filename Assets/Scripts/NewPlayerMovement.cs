@@ -14,8 +14,7 @@ public class NewPlayerMovement : MonoBehaviour
 
     public bool CanMove { get; private set; } = true;
     private bool IsSprinting => canSprint && playerControls.Player.Sprint.IsInProgress();
-    private bool ShouldCrouch => playerControls.Player.Crouch.IsInProgress() && !duringCrouchAnimation && characterController.isGrounded;
-
+    private bool ShouldCrouch => playerControls.Player.Crouch.IsInProgress() && !duringCrouchAnimation && characterController.isGrounded || crouchCancelled;
 
     [Header("Functional Options")]
     [SerializeField] private bool canSprint = true;
@@ -31,6 +30,7 @@ public class NewPlayerMovement : MonoBehaviour
     [SerializeField] private float walkSpeed = 3.0f;
     [SerializeField] private float sprintSpeed = 6.0f;
     [SerializeField] private float gravity = 30.0f;
+    public bool toggleCrouch = false;
 
     [Header("Crouch Parameters")]
     [SerializeField] private float crouchHeight = 0.5f;
@@ -40,6 +40,12 @@ public class NewPlayerMovement : MonoBehaviour
     [SerializeField] private Vector3 standingCenter = new Vector3(0, 0, 0);
     [SerializeField] private Vector3 crouchingScale = new Vector3(1, 0.25f, 1);
     [SerializeField] private Vector3 standingScale = new Vector3(1, 1, 1);
+    [SerializeField] private bool crouchCancelled;
+
+    [SerializeField] private Vector3 currentCameraPosition = new Vector3(0, 0, 0);
+    [SerializeField] private float standingCamDelta = 0.5f;
+    [SerializeField] private float crouchingCamDelta = -0.5f;
+
     private bool isCrouching;
     private bool duringCrouchAnimation;
 
@@ -78,7 +84,6 @@ public class NewPlayerMovement : MonoBehaviour
 
     void Update()
     {
-
         if (CanMove)
         {
             HandleMovementInput();
@@ -104,10 +109,20 @@ public class NewPlayerMovement : MonoBehaviour
 
     private void HandleCrouch()
     {
-        if (ShouldCrouch)
+        if (playerControls.Player.Crouch.WasReleasedThisFrame())
         {
-            StartCoroutine(CrouchStand());
-
+            crouchCancelled = true;
+        }
+        if (ShouldCrouch)
+        { 
+            if(toggleCrouch)
+            {
+                StartCoroutine(CrouchStand());
+            }
+            else if(playerControls.Player.Crouch.WasPressedThisFrame() || crouchCancelled)
+            {
+                StartCoroutine(CrouchStand());
+            }
         }
     }
 
@@ -158,6 +173,8 @@ public class NewPlayerMovement : MonoBehaviour
             moveDirection.y -= gravity * Time.deltaTime;
         }
 
+        currentCameraPosition = playerCamera.transform.position;
+
         characterController.Move(moveDirection * Time.deltaTime);
     }
 
@@ -165,23 +182,40 @@ public class NewPlayerMovement : MonoBehaviour
     {
         duringCrouchAnimation = true;
 
+        float targetCamDelta = isCrouching ? standingCamDelta : crouchingCamDelta;
+
         float timeElapsed = 0;
         float targetHeight = isCrouching ? standingHeight : crouchHeight;
         float currentHeight = characterController.height;
         Vector3 targetCenter = isCrouching ? standingCenter : crouchingCenter;
         Vector3 currentCenter = characterController.center;
-        Vector3 targetScale = isCrouching ? standingScale : crouchingScale;
-        Vector3 currentScale = playerObjOrientation.transform.localScale;
+        Vector3 cameraCurrentPosition = playerCamera.transform.position;
 
+
+
+        Vector3 targetPosition = isCrouching ? new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y + 0.5f, playerCamera.transform.position.z) : new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y - 0.5f, playerCamera.transform.position.z);
+        
         while (timeElapsed < timeToCrouch)
         {
+            if (crouchCancelled)
+            {
+                targetCenter = standingCenter;
+                targetHeight = standingHeight;
+                currentCenter = characterController.center;
+                currentHeight = characterController.height;
+                timeElapsed = 0;
+                crouchCancelled = !crouchCancelled;
+                Debug.Log("This is working!");
+            }
             if (isCrouching)
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
+                //transform.position = new Vector3(transform.position.x, transform.position.y + 0.07f, transform.position.z);
             }
-            characterController.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / timeToCrouch);
-            playerObjOrientation.localScale = Vector3.Lerp(currentScale, targetScale, timeElapsed / timeToCrouch);
-            characterController.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed/timeToCrouch);
+
+            playerCamera.transform.position = Vector3.Lerp(cameraCurrentPosition, targetPosition, timeElapsed / timeToCrouch);
+
+            //characterController.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / timeToCrouch);
+            //characterController.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed / timeToCrouch);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
