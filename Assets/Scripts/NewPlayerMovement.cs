@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,7 +15,7 @@ public class NewPlayerMovement : MonoBehaviour
 
     public bool CanMove { get; private set; } = true;
     private bool IsSprinting => canSprint && playerControls.Player.Sprint.IsInProgress();
-    private bool ShouldCrouch => playerControls.Player.Crouch.IsInProgress() && !duringCrouchAnimation && characterController.isGrounded || crouchCancelled;
+    private bool ShouldCrouch => (playerControls.Player.Crouch.WasPressedThisFrame() || playerControls.Player.Crouch.WasReleasedThisFrame()) && !duringCrouchAnimation && characterController.isGrounded || (crouchCancelled && !duringCrouchAnimation);
 
     [Header("Functional Options")]
     [SerializeField] private bool canSprint = true;
@@ -29,6 +30,7 @@ public class NewPlayerMovement : MonoBehaviour
     [Header("Movement Parameters")]
     [SerializeField] private float walkSpeed = 3.0f;
     [SerializeField] private float sprintSpeed = 6.0f;
+    [SerializeField] private float crouchSpeed = 1.5f;
     [SerializeField] private float gravity = 30.0f;
     public bool toggleCrouch = false;
 
@@ -42,9 +44,8 @@ public class NewPlayerMovement : MonoBehaviour
     [SerializeField] private Vector3 standingScale = new Vector3(1, 1, 1);
     [SerializeField] private bool crouchCancelled;
 
-    [SerializeField] private Vector3 currentCameraPosition = new Vector3(0, 0, 0);
-    [SerializeField] private float standingCamDelta = 0.5f;
-    [SerializeField] private float crouchingCamDelta = -0.5f;
+    [Header("Tablet Parameters")]
+    [SerializeField] private bool isInTablet = false;
 
     private bool isCrouching;
     private bool duringCrouchAnimation;
@@ -54,15 +55,15 @@ public class NewPlayerMovement : MonoBehaviour
     [Header("Look Parameters")]
     [SerializeField, Range(1, 50)] private float lookSpeedX = 30.0f;
     [SerializeField, Range(1, 50)] private float lookSpeedY = 30.0f;
-    [SerializeField, Range(1, 50)] private float leanSens = 5.0f;
-    [SerializeField, Range(1, 10)] private float leanSensSlerp = 7.0f;
+    [SerializeField, Range(1, 50)] private float leanSens = 30.0f;
+    [SerializeField, Range(1, 10)] private float leanSensSlerp = 5.0f;
     [SerializeField, Range(-180, 180)] private float upperLookLimit = 80.0f;
     [SerializeField, Range(-180, 180)] private float lowerLookLimit = -80.0f;
     [SerializeField] private float xRotation;
     [SerializeField] private float yRotation;
     [SerializeField] public bool isLeaning { get; private set; } = false;
     [SerializeField] private Transform playerObjOrientation;
-    [SerializeField] private Transform leanRotationPoint;
+    //[SerializeField] private Transform leanRotationPoint;
 
     private Camera playerCamera;
     private CharacterController characterController;
@@ -84,6 +85,7 @@ public class NewPlayerMovement : MonoBehaviour
 
     void Update()
     {
+        HandleTablet();
         if (CanMove)
         {
             HandleMovementInput();
@@ -94,14 +96,35 @@ public class NewPlayerMovement : MonoBehaviour
         }
     }
 
+    private void HandleTablet()
+    {
+        if (playerControls.Player.Tablet.WasPressedThisFrame())
+        {
+            CanMove = !CanMove;
+            isInTablet = !isInTablet;
+        }
+
+        if (isInTablet)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        
+    }
+
     // Handles keyboard inputs
     private void HandleMovementInput()
     {
         float moveDirectionY = moveDirection.y;
         
         currentInput = playerControls.Player.Movement.ReadValue<Vector2>();
-        currentInput.x *= (IsSprinting ? sprintSpeed : walkSpeed);
-        currentInput.y *= (IsSprinting ? sprintSpeed : walkSpeed);
+        currentInput.x *= (isCrouching ? crouchSpeed : IsSprinting ? sprintSpeed : walkSpeed);
+        currentInput.y *= (isCrouching ? crouchSpeed : IsSprinting ? sprintSpeed : walkSpeed);
 
         moveDirection = (transform.TransformDirection(Vector3.forward) * currentInput.y) + (transform.TransformDirection(Vector3.right) * currentInput.x);
         moveDirection.y = moveDirectionY;
@@ -109,20 +132,17 @@ public class NewPlayerMovement : MonoBehaviour
 
     private void HandleCrouch()
     {
+        /*if (characterController.height == standingHeight)
+        {
+            crouchCancelled = false;
+        }
         if (playerControls.Player.Crouch.WasReleasedThisFrame())
         {
             crouchCancelled = true;
-        }
+        }*/
         if (ShouldCrouch)
-        { 
-            if(toggleCrouch)
-            {
-                StartCoroutine(CrouchStand());
-            }
-            else if(playerControls.Player.Crouch.WasPressedThisFrame() || crouchCancelled)
-            {
-                StartCoroutine(CrouchStand());
-            }
+        {
+            StartCoroutine(CrouchStand());
         }
     }
 
@@ -172,17 +192,12 @@ public class NewPlayerMovement : MonoBehaviour
         {
             moveDirection.y -= gravity * Time.deltaTime;
         }
-
-        currentCameraPosition = playerCamera.transform.position;
-
         characterController.Move(moveDirection * Time.deltaTime);
     }
 
     private IEnumerator CrouchStand()
     {
         duringCrouchAnimation = true;
-
-        float targetCamDelta = isCrouching ? standingCamDelta : crouchingCamDelta;
 
         float timeElapsed = 0;
         float targetHeight = isCrouching ? standingHeight : crouchHeight;
@@ -191,39 +206,41 @@ public class NewPlayerMovement : MonoBehaviour
         Vector3 currentCenter = characterController.center;
         Vector3 cameraCurrentPosition = playerCamera.transform.position;
 
-
-
         Vector3 targetPosition = isCrouching ? new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y + 0.5f, playerCamera.transform.position.z) : new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y - 0.5f, playerCamera.transform.position.z);
         
         while (timeElapsed < timeToCrouch)
         {
-            if (crouchCancelled)
-            {
-                targetCenter = standingCenter;
-                targetHeight = standingHeight;
-                currentCenter = characterController.center;
-                currentHeight = characterController.height;
-                timeElapsed = 0;
-                crouchCancelled = !crouchCancelled;
-                Debug.Log("This is working!");
-            }
-            if (isCrouching)
-            {
-                //transform.position = new Vector3(transform.position.x, transform.position.y + 0.07f, transform.position.z);
-            }
+            cameraCurrentPosition = new Vector3(transform.position.x, targetPosition.y, transform.position.z);
+            //targetPosition = isCrouching ? new Vector3(playerCamera.)
 
-            playerCamera.transform.position = Vector3.Lerp(cameraCurrentPosition, targetPosition, timeElapsed / timeToCrouch);
+            
+            if(!isCrouching && !playerControls.Player.Crouch.IsPressed())
+            {
+                currentHeight = characterController.height;
+                currentCenter = characterController.center;
+                timeElapsed = timeToCrouch - timeElapsed;
+                characterController.height = Mathf.Lerp(currentHeight, standingHeight, timeElapsed / timeToCrouch);
+                characterController.center = Vector3.Lerp(currentCenter, standingCenter, timeElapsed / timeToCrouch);
+            }
+            else
+            {
+                characterController.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / timeToCrouch);
+                characterController.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed / timeToCrouch);
+            }
+            //playerCamera.transform.position = Vector3.Lerp(cameraCurrentPosition, targetPosition, timeElapsed / timeToCrouch);
 
             //characterController.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / timeToCrouch);
             //characterController.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed / timeToCrouch);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
+        
+        isCrouching = !isCrouching;
+        
+        //playerCamera.transform.position = isCrouching ? new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y + 0.5f, playerCamera.transform.position.z) : new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y - 0.5f, playerCamera.transform.position.z);
 
         characterController.height = targetHeight;
         characterController.center = targetCenter;
-
-        isCrouching = !isCrouching;
 
         duringCrouchAnimation = false;
     }
