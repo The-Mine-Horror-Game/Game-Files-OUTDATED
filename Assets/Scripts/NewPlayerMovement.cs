@@ -47,7 +47,7 @@ public class NewPlayerMovement : MonoBehaviour
     [Header("Tablet Parameters")]
     [SerializeField] private bool isInTablet = false;
 
-    private bool isCrouching;
+    [SerializeField] private bool isCrouching;
     private bool duringCrouchAnimation;
 
     private PlayerControls playerControls;
@@ -214,19 +214,19 @@ public class NewPlayerMovement : MonoBehaviour
             //targetPosition = isCrouching ? new Vector3(playerCamera.)
 
             
-            if(!isCrouching && !playerControls.Player.Crouch.IsPressed())
+            if (!isCrouching && !playerControls.Player.Crouch.IsPressed())
             {
                 currentHeight = characterController.height;
                 currentCenter = characterController.center;
                 timeElapsed = timeToCrouch - timeElapsed;
-                characterController.height = Mathf.Lerp(currentHeight, standingHeight, timeElapsed / timeToCrouch);
-                characterController.center = Vector3.Lerp(currentCenter, standingCenter, timeElapsed / timeToCrouch);
+                targetHeight = standingHeight;
+                targetCenter = standingCenter;
+                isCrouching = !isCrouching;
+                crouchCancelled = true;
             }
-            else
-            {
-                characterController.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / timeToCrouch);
-                characterController.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed / timeToCrouch);
-            }
+
+            characterController.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / timeToCrouch);
+            characterController.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed / timeToCrouch);
             //playerCamera.transform.position = Vector3.Lerp(cameraCurrentPosition, targetPosition, timeElapsed / timeToCrouch);
 
             //characterController.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / timeToCrouch);
@@ -236,6 +236,7 @@ public class NewPlayerMovement : MonoBehaviour
         }
         
         isCrouching = !isCrouching;
+        crouchCancelled = false;
         
         //playerCamera.transform.position = isCrouching ? new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y + 0.5f, playerCamera.transform.position.z) : new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y - 0.5f, playerCamera.transform.position.z);
 
