@@ -43,6 +43,9 @@ public class NewPlayerMovement : MonoBehaviour
     [SerializeField] private Vector3 crouchingScale = new Vector3(1, 0.25f, 1);
     [SerializeField] private Vector3 standingScale = new Vector3(1, 1, 1);
     [SerializeField] private bool crouchCancelled;
+    [SerializeField] private bool crouchBlocked;
+    [SerializeField] private bool crouchQueued;
+    [SerializeField] private Transform orientationObj;
 
     [Header("Tablet Parameters")]
     [SerializeField] private bool isInTablet = false;
@@ -96,6 +99,19 @@ public class NewPlayerMovement : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        //excludes the player from the raycast
+        int layerMask = 1 << 6;
+        layerMask = ~layerMask;
+        crouchBlocked = isCrouching && Physics.Raycast(orientationObj.position, orientationObj.TransformDirection(Vector3.up), 1.5f, layerMask);
+
+        if (crouchBlocked && ShouldCrouch)
+        {
+            crouchQueued = true;
+        }
+    }
+
     private void HandleTablet()
     {
         if (playerControls.Player.Tablet.WasPressedThisFrame())
@@ -140,7 +156,7 @@ public class NewPlayerMovement : MonoBehaviour
         {
             crouchCancelled = true;
         }*/
-        if (ShouldCrouch)
+        if ((ShouldCrouch || crouchQueued) && !crouchBlocked)
         {
             StartCoroutine(CrouchStand());
         }
@@ -243,6 +259,7 @@ public class NewPlayerMovement : MonoBehaviour
         characterController.height = targetHeight;
         characterController.center = targetCenter;
 
+        crouchQueued = false;
         duringCrouchAnimation = false;
     }
 }

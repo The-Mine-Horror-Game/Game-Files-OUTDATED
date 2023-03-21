@@ -135,9 +135,9 @@ GameObject:
   - component: {fileID: 349089888}
   - component: {fileID: 349089887}
   - component: {fileID: 349089886}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -612,7 +612,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 632455877}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.9877944, y: 2.69, z: 0.6876917}
+  m_LocalPosition: {x: -2.9877944, y: 1.81, z: 0.6876917}
   m_LocalScale: {x: 1.9458, y: 1.9458, z: 1.9458}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -986,6 +986,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1085371405 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5052322423859485849, guid: 2a78a6cca5acca94292f78657785eb51, type: 3}
+  m_PrefabInstance: {fileID: 1177783464}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1177783464
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1062,6 +1067,10 @@ PrefabInstance:
       propertyPath: leanSensSlerp
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 5052322423225529901, guid: 2a78a6cca5acca94292f78657785eb51, type: 3}
+      propertyPath: orientationObj
+      value: 
+      objectReference: {fileID: 1085371405}
     - target: {fileID: 5052322423225529902, guid: 2a78a6cca5acca94292f78657785eb51, type: 3}
       propertyPath: m_Name
       value: FirstPersonController
@@ -1072,7 +1081,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5052322423859485850, guid: 2a78a6cca5acca94292f78657785eb51, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8992576082088495850, guid: 2a78a6cca5acca94292f78657785eb51, type: 3}
       propertyPath: m_LocalPosition.y

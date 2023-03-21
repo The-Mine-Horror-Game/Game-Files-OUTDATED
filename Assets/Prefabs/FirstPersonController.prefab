@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8992576082088495850}
   - component: {fileID: 3455374293240244091}
   - component: {fileID: 6821604340777073764}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 5052322423225529900}
   - component: {fileID: 5052322423225529901}
   - component: {fileID: 5052322423225529898}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FirstPersonController
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -175,6 +175,7 @@ MonoBehaviour:
   rightKey: 100
   walkSpeed: 3
   sprintSpeed: 6
+  crouchSpeed: 1.5
   gravity: 30
   toggleCrouch: 0
   crouchHeight: 0.5
@@ -185,10 +186,8 @@ MonoBehaviour:
   crouchingScale: {x: 0, y: 0.25, z: 0}
   standingScale: {x: 0, y: 2, z: 0}
   crouchCancelled: 0
-  currentCameraPosition: {x: 0, y: 0, z: 0}
-  standingCamDelta: 0.5
-  crouchingCamDelta: -0.5
   isInTablet: 0
+  isCrouching: 0
   lookSpeedX: 30
   lookSpeedY: 30
   leanSens: 35
@@ -272,7 +271,7 @@ GameObject:
   - component: {fileID: 5052322423859485846}
   - component: {fileID: 5052322423859485847}
   - component: {fileID: 5052322423859485848}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Orientation Obj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -376,7 +375,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3855655003027956427}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
