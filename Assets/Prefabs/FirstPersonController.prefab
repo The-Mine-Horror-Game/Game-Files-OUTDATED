@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5052322422374469443
+--- !u!1 &4259016079295103256
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,38 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5052322422374469442}
-  - component: {fileID: 5052322422374469440}
-  - component: {fileID: 5052322422374469441}
-  m_Layer: 0
-  m_Name: Player Camera
+  - component: {fileID: 8992576082088495850}
+  - component: {fileID: 3455374293240244091}
+  - component: {fileID: 6821604340777073764}
+  m_Layer: 6
+  m_Name: PlayerCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5052322422374469442
+--- !u!4 &8992576082088495850
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5052322422374469443}
+  m_GameObject: {fileID: 4259016079295103256}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5052322423225529899}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &5052322422374469440
+--- !u!20 &3455374293240244091
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5052322422374469443}
+  m_GameObject: {fileID: 4259016079295103256}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -84,13 +84,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &5052322422374469441
+--- !u!81 &6821604340777073764
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5052322422374469443}
+  m_GameObject: {fileID: 4259016079295103256}
   m_Enabled: 1
 --- !u!1 &5052322423225529902
 GameObject:
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 5052322423225529900}
   - component: {fileID: 5052322423225529901}
   - component: {fileID: 5052322423225529898}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FirstPersonController
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -123,10 +123,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5052322422374469442}
   - {fileID: 5052322423859485849}
+  - {fileID: 8992576082088495850}
+  - {fileID: 3855655003027956427}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &5052322423225529900
 CharacterController:
@@ -174,6 +175,7 @@ MonoBehaviour:
   rightKey: 100
   walkSpeed: 3
   sprintSpeed: 6
+  crouchSpeed: 1.5
   gravity: 30
   toggleCrouch: 0
   crouchHeight: 0.5
@@ -184,9 +186,8 @@ MonoBehaviour:
   crouchingScale: {x: 0, y: 0.25, z: 0}
   standingScale: {x: 0, y: 2, z: 0}
   crouchCancelled: 0
-  currentCameraPosition: {x: 0, y: 0, z: 0}
-  standingCamDelta: 0.5
-  crouchingCamDelta: -0.5
+  isInTablet: 0
+  isCrouching: 0
   lookSpeedX: 30
   lookSpeedY: 30
   leanSens: 35
@@ -196,7 +197,6 @@ MonoBehaviour:
   xRotation: 0
   yRotation: 0
   playerObjOrientation: {fileID: 5052322423859485849}
-  leanRotationPoint: {fileID: 0}
 --- !u!114 &5052322423225529898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,11 +250,15 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 60a7359f-f897-4706-9edb-01d9698c7205
     m_ActionName: Player/Crouch[/Keyboard/leftCtrl]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5f8a2b07-a910-4839-9d16-3eba8b412d6c
+    m_ActionName: Player/Tablet[/Keyboard/c]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 3455374293240244091}
 --- !u!1 &5052322423859485850
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,7 +271,7 @@ GameObject:
   - component: {fileID: 5052322423859485846}
   - component: {fileID: 5052322423859485847}
   - component: {fileID: 5052322423859485848}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Orientation Obj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -362,3 +366,34 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6182935301591329562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3855655003027956427}
+  m_Layer: 6
+  m_Name: CameraPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3855655003027956427
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6182935301591329562}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.589, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5052322423225529899}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -10,11 +10,17 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()
     {
         
+    }
+
+    public void SwitchCamera()
+    {
+        Debug.Log("Cam 1 activated");
+        return;
     }
 }

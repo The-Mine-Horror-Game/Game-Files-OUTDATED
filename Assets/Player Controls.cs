@@ -80,6 +80,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Tablet"",
+                    ""type"": ""Button"",
+                    ""id"": ""5f8a2b07-a910-4839-9d16-3eba8b412d6c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -214,6 +223,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f6452fdd-b181-4210-aabf-aaa2f34e7cf1"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Tablet"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -244,6 +264,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_Lean = m_Player.FindAction("Lean", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
+        m_Player_Tablet = m_Player.FindAction("Tablet", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
@@ -312,6 +333,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_Lean;
     private readonly InputAction m_Player_Crouch;
+    private readonly InputAction m_Player_Tablet;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -322,6 +344,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @Lean => m_Wrapper.m_Player_Lean;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
+        public InputAction @Tablet => m_Wrapper.m_Player_Tablet;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -349,6 +372,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Crouch.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
                 @Crouch.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
                 @Crouch.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
+                @Tablet.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTablet;
+                @Tablet.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTablet;
+                @Tablet.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTablet;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -371,6 +397,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Crouch.started += instance.OnCrouch;
                 @Crouch.performed += instance.OnCrouch;
                 @Crouch.canceled += instance.OnCrouch;
+                @Tablet.started += instance.OnTablet;
+                @Tablet.performed += instance.OnTablet;
+                @Tablet.canceled += instance.OnTablet;
             }
         }
     }
@@ -416,6 +445,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnLean(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
+        void OnTablet(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
