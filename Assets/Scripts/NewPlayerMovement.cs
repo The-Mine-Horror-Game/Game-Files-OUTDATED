@@ -51,7 +51,7 @@ public class NewPlayerMovement : MonoBehaviour
     [SerializeField] private bool isInTablet = false;
 
     [SerializeField] private bool isCrouching;
-    private bool duringCrouchAnimation;
+    [SerializeField] private bool duringCrouchAnimation;
 
     private PlayerControls playerControls;
 
@@ -106,9 +106,16 @@ public class NewPlayerMovement : MonoBehaviour
         layerMask = ~layerMask;
         crouchBlocked = isCrouching && Physics.Raycast(orientationObj.position, orientationObj.TransformDirection(Vector3.up), 1.5f, layerMask);
 
-        if (crouchBlocked && ShouldCrouch)
+        if (crouchBlocked)
         {
-            crouchQueued = true;
+            if (playerControls.Player.Crouch.IsPressed())
+            {
+                crouchQueued = false;
+            }
+            else if (ShouldCrouch)
+            {
+                crouchQueued = true;
+            }
         }
     }
 
@@ -158,6 +165,7 @@ public class NewPlayerMovement : MonoBehaviour
         }*/
         if ((ShouldCrouch || crouchQueued) && !crouchBlocked)
         {
+            crouchQueued = false;
             StartCoroutine(CrouchStand());
         }
     }
@@ -230,14 +238,14 @@ public class NewPlayerMovement : MonoBehaviour
             //targetPosition = isCrouching ? new Vector3(playerCamera.)
 
             
-            if (!isCrouching && !playerControls.Player.Crouch.IsPressed())
+            if ((!isCrouching) && (!playerControls.Player.Crouch.IsPressed()))
             {
                 currentHeight = characterController.height;
                 currentCenter = characterController.center;
                 timeElapsed = timeToCrouch - timeElapsed;
                 targetHeight = standingHeight;
                 targetCenter = standingCenter;
-                isCrouching = !isCrouching;
+                isCrouching = true;
                 crouchCancelled = true;
             }
 
