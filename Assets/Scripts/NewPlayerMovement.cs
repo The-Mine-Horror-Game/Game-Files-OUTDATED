@@ -14,7 +14,7 @@ public class NewPlayerMovement : MonoBehaviour
      */
 
     public bool CanMove { get; private set; } = true;
-    private bool IsSprinting => canSprint && playerControls.Player.Sprint.IsInProgress();
+    private bool IsSprinting => canSprint && playerControls.Player.Sprint.IsInProgress() && stamina > 0 && !staminaRecharging;
     private bool ShouldCrouch => (playerControls.Player.Crouch.WasPressedThisFrame() || playerControls.Player.Crouch.WasReleasedThisFrame()) && !duringCrouchAnimation && characterController.isGrounded || (crouchCancelled && !duringCrouchAnimation);
 
     [Header("Functional Options")]
@@ -33,6 +33,12 @@ public class NewPlayerMovement : MonoBehaviour
     [SerializeField] private float crouchSpeed = 1.5f;
     [SerializeField] private float gravity = 30.0f;
     public bool toggleCrouch = false;
+
+    [Header("Stamina")]
+    [SerializeField] private float staminaMax = 5f;
+    [SerializeField] private float staminaRegen = 1f;
+    [SerializeField] private float stamina;
+    [SerializeField] private bool staminaRecharging;
 
     [Header("Crouch Parameters")]
     [SerializeField] private float crouchHeight = 0.5f;
@@ -84,6 +90,7 @@ public class NewPlayerMovement : MonoBehaviour
         // Locks the cursor in the screen and makes it invisible
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        stamina = staminaMax;
     }
 
     void Update()
@@ -94,6 +101,7 @@ public class NewPlayerMovement : MonoBehaviour
             HandleMovementInput();
             HandleMouseLook();
             HandleCrouch();
+            HandleStamina();
 
             ApplyFinalMovements();
         }
@@ -112,7 +120,7 @@ public class NewPlayerMovement : MonoBehaviour
             {
                 crouchQueued = false;
             }
-            else if (ShouldCrouch)
+            else
             {
                 crouchQueued = true;
             }
@@ -144,10 +152,11 @@ public class NewPlayerMovement : MonoBehaviour
     private void HandleMovementInput()
     {
         float moveDirectionY = moveDirection.y;
-        
         currentInput = playerControls.Player.Movement.ReadValue<Vector2>();
-        currentInput.x *= (isCrouching ? crouchSpeed : IsSprinting ? sprintSpeed : walkSpeed);
-        currentInput.y *= (isCrouching ? crouchSpeed : IsSprinting ? sprintSpeed : walkSpeed);
+        
+        currentInput.x *= isCrouching ? crouchSpeed : IsSprinting ? sprintSpeed : walkSpeed;
+        currentInput.y *= isCrouching ? crouchSpeed : IsSprinting ? sprintSpeed : walkSpeed;
+        
 
         moveDirection = (transform.TransformDirection(Vector3.forward) * currentInput.y) + (transform.TransformDirection(Vector3.right) * currentInput.x);
         moveDirection.y = moveDirectionY;
@@ -155,18 +164,30 @@ public class NewPlayerMovement : MonoBehaviour
 
     private void HandleCrouch()
     {
-        /*if (characterController.height == standingHeight)
-        {
-            crouchCancelled = false;
-        }
-        if (playerControls.Player.Crouch.WasReleasedThisFrame())
-        {
-            crouchCancelled = true;
-        }*/
         if ((ShouldCrouch || crouchQueued) && !crouchBlocked)
         {
             crouchQueued = false;
             StartCoroutine(CrouchStand());
+        }
+    }
+
+    private void HandleStamina()
+    {
+        if (IsSprinting && currentInput != new Vector2(0, 0))
+        {
+            stamina -= Time.deltaTime;
+        }
+        else if (stamina < staminaMax)
+        {
+            if (stamina <= 0)
+            {
+                staminaRecharging = true;
+            }
+            stamina += staminaRegen * Time.deltaTime;
+        }
+        else
+        {
+            staminaRecharging = false;
         }
     }
 
