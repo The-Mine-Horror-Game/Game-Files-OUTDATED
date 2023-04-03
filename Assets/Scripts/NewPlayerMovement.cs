@@ -14,6 +14,7 @@ public class NewPlayerMovement : MonoBehaviour
      */
 
     public bool CanMove { get; private set; } = true;
+    public bool isInTablet { get; private set; } = false;
     private bool IsSprinting => canSprint && playerControls.Player.Sprint.IsInProgress() && stamina > 0 && !staminaRecharging;
     private bool ShouldCrouch => (playerControls.Player.Crouch.WasPressedThisFrame() || playerControls.Player.Crouch.WasReleasedThisFrame()) && !duringCrouchAnimation && characterController.isGrounded || (crouchCancelled && !duringCrouchAnimation);
 
@@ -46,20 +47,19 @@ public class NewPlayerMovement : MonoBehaviour
     [SerializeField] private float timeToCrouch = 2f;
     [SerializeField] private Vector3 crouchingCenter = new Vector3(0, 0.5f, 0);
     [SerializeField] private Vector3 standingCenter = new Vector3(0, 0, 0);
-    [SerializeField] private Vector3 crouchingScale = new Vector3(1, 0.25f, 1);
-    [SerializeField] private Vector3 standingScale = new Vector3(1, 1, 1);
     [SerializeField] private bool crouchCancelled;
     [SerializeField] private bool crouchBlocked;
     [SerializeField] private bool crouchQueued;
     [SerializeField] private Transform orientationObj;
-
-    [Header("Tablet Parameters")]
-    [SerializeField] private bool isInTablet = false;
-
-    [SerializeField] private bool isCrouching;
     [SerializeField] private bool duringCrouchAnimation;
 
-    private PlayerControls playerControls;
+
+    [Header("Tablet Parameters")]
+    [SerializeField] private bool isCrouching;
+    [SerializeField] private GameObject tablet;
+
+
+    public PlayerControls playerControls;
 
     [Header("Look Parameters")]
     [SerializeField, Range(1, 50)] private float lookSpeedX = 30.0f;
@@ -129,19 +129,24 @@ public class NewPlayerMovement : MonoBehaviour
 
     private void HandleTablet()
     {
-        if (playerControls.Player.Tablet.WasPressedThisFrame())
+        if (playerControls.Player.Tablet.WasPressedThisFrame() || playerControls.Tablet.Tablet.WasPressedThisFrame())
         {
-            CanMove = !CanMove;
+            //CanMove = !CanMove;
             isInTablet = !isInTablet;
+            tablet.SetActive(!tablet.activeSelf);
         }
 
         if (isInTablet)
         {
+            playerControls.Tablet.Enable();
+            playerControls.Player.Disable();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
         else
         {
+            playerControls.Tablet.Disable();
+            playerControls.Player.Enable();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -185,6 +190,10 @@ public class NewPlayerMovement : MonoBehaviour
             }
             stamina += staminaRegen * Time.deltaTime;
         }
+        else if (stamina > staminaMax)
+        {
+            stamina = staminaMax;
+        }
         else
         {
             staminaRecharging = false;
@@ -197,10 +206,17 @@ public class NewPlayerMovement : MonoBehaviour
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * lookSpeedX;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * lookSpeedY;
 
+        // Slows down mouse movement when in tablet
+        if (isInTablet)
+        {
+            mouseX *= 0.05f;
+            mouseY *= 0.05f;
+        }
         // Just trust this is how unity works, it's weird but that's how it is
         yRotation += mouseX;
 
         xRotation -= mouseY;
+
 
         // Stops the camera from rotating more than 90 degreed up or down
         xRotation = Mathf.Clamp(xRotation, lowerLookLimit, upperLookLimit);

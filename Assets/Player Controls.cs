@@ -252,6 +252,138 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 }
             ],
             ""bindings"": []
+        },
+        {
+            ""name"": ""Tablet"",
+            ""id"": ""39e3886f-8205-4c6b-97da-33a99c18d844"",
+            ""actions"": [
+                {
+                    ""name"": ""SwitchCamUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""e395c98e-5b9a-4475-abaf-8b59f5287013"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwitchCamDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""2ec5bad9-bb89-4dc0-ba6d-1aa981e87d9f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateCam"",
+                    ""type"": ""Value"",
+                    ""id"": ""9595a2a4-3180-4fd6-80cb-bab8d76b3954"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Tablet"",
+                    ""type"": ""Button"",
+                    ""id"": ""2c960d57-1b3c-417d-a802-3706cf0b4907"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""4e21c5d2-3073-401f-925d-32122789bc65"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchCamUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eac7aa96-f0ad-45b9-bda4-10233acce02f"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchCamDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""15bda6ce-20d6-4c71-a3e0-3015f7f28306"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCam"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""dd3ceb3f-897f-42eb-98a5-ae80abb97237"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""510b114d-6cc5-411d-9148-930e1366367c"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""29fd7531-b06f-4eda-bfb8-8870ee778752"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""b346a4e6-e203-409f-8700-da94d2052a5a"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1b2fcabd-f56d-4915-9f80-f41e5b4ad8c2"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Tablet"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -268,6 +400,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
+        // Tablet
+        m_Tablet = asset.FindActionMap("Tablet", throwIfNotFound: true);
+        m_Tablet_SwitchCamUp = m_Tablet.FindAction("SwitchCamUp", throwIfNotFound: true);
+        m_Tablet_SwitchCamDown = m_Tablet.FindAction("SwitchCamDown", throwIfNotFound: true);
+        m_Tablet_RotateCam = m_Tablet.FindAction("RotateCam", throwIfNotFound: true);
+        m_Tablet_Tablet = m_Tablet.FindAction("Tablet", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -437,6 +575,63 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // Tablet
+    private readonly InputActionMap m_Tablet;
+    private ITabletActions m_TabletActionsCallbackInterface;
+    private readonly InputAction m_Tablet_SwitchCamUp;
+    private readonly InputAction m_Tablet_SwitchCamDown;
+    private readonly InputAction m_Tablet_RotateCam;
+    private readonly InputAction m_Tablet_Tablet;
+    public struct TabletActions
+    {
+        private @PlayerControls m_Wrapper;
+        public TabletActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @SwitchCamUp => m_Wrapper.m_Tablet_SwitchCamUp;
+        public InputAction @SwitchCamDown => m_Wrapper.m_Tablet_SwitchCamDown;
+        public InputAction @RotateCam => m_Wrapper.m_Tablet_RotateCam;
+        public InputAction @Tablet => m_Wrapper.m_Tablet_Tablet;
+        public InputActionMap Get() { return m_Wrapper.m_Tablet; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TabletActions set) { return set.Get(); }
+        public void SetCallbacks(ITabletActions instance)
+        {
+            if (m_Wrapper.m_TabletActionsCallbackInterface != null)
+            {
+                @SwitchCamUp.started -= m_Wrapper.m_TabletActionsCallbackInterface.OnSwitchCamUp;
+                @SwitchCamUp.performed -= m_Wrapper.m_TabletActionsCallbackInterface.OnSwitchCamUp;
+                @SwitchCamUp.canceled -= m_Wrapper.m_TabletActionsCallbackInterface.OnSwitchCamUp;
+                @SwitchCamDown.started -= m_Wrapper.m_TabletActionsCallbackInterface.OnSwitchCamDown;
+                @SwitchCamDown.performed -= m_Wrapper.m_TabletActionsCallbackInterface.OnSwitchCamDown;
+                @SwitchCamDown.canceled -= m_Wrapper.m_TabletActionsCallbackInterface.OnSwitchCamDown;
+                @RotateCam.started -= m_Wrapper.m_TabletActionsCallbackInterface.OnRotateCam;
+                @RotateCam.performed -= m_Wrapper.m_TabletActionsCallbackInterface.OnRotateCam;
+                @RotateCam.canceled -= m_Wrapper.m_TabletActionsCallbackInterface.OnRotateCam;
+                @Tablet.started -= m_Wrapper.m_TabletActionsCallbackInterface.OnTablet;
+                @Tablet.performed -= m_Wrapper.m_TabletActionsCallbackInterface.OnTablet;
+                @Tablet.canceled -= m_Wrapper.m_TabletActionsCallbackInterface.OnTablet;
+            }
+            m_Wrapper.m_TabletActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @SwitchCamUp.started += instance.OnSwitchCamUp;
+                @SwitchCamUp.performed += instance.OnSwitchCamUp;
+                @SwitchCamUp.canceled += instance.OnSwitchCamUp;
+                @SwitchCamDown.started += instance.OnSwitchCamDown;
+                @SwitchCamDown.performed += instance.OnSwitchCamDown;
+                @SwitchCamDown.canceled += instance.OnSwitchCamDown;
+                @RotateCam.started += instance.OnRotateCam;
+                @RotateCam.performed += instance.OnRotateCam;
+                @RotateCam.canceled += instance.OnRotateCam;
+                @Tablet.started += instance.OnTablet;
+                @Tablet.performed += instance.OnTablet;
+                @Tablet.canceled += instance.OnTablet;
+            }
+        }
+    }
+    public TabletActions @Tablet => new TabletActions(this);
     public interface IPlayerActions
     {
         void OnFlashlight(InputAction.CallbackContext context);
@@ -450,5 +645,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnNewaction(InputAction.CallbackContext context);
+    }
+    public interface ITabletActions
+    {
+        void OnSwitchCamUp(InputAction.CallbackContext context);
+        void OnSwitchCamDown(InputAction.CallbackContext context);
+        void OnRotateCam(InputAction.CallbackContext context);
+        void OnTablet(InputAction.CallbackContext context);
     }
 }
