@@ -131,11 +131,9 @@ public class NewPlayerMovement : MonoBehaviour
     {
         if (playerControls.Player.Tablet.WasPressedThisFrame() || playerControls.Tablet.Tablet.WasPressedThisFrame())
         {
-            //CanMove = !CanMove;
             isInTablet = !isInTablet;
             tablet.SetActive(!tablet.activeSelf);
         }
-
         if (isInTablet)
         {
             playerControls.Tablet.Enable();
