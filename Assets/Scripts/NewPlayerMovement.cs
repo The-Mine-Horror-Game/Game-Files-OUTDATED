@@ -15,6 +15,7 @@ public class NewPlayerMovement : MonoBehaviour
 
     public bool CanMove { get; private set; } = true;
     public bool isInTablet { get; private set; } = false;
+    public bool isInMenu { get; private set; } = false;
     private bool IsSprinting => canSprint && playerControls.Player.Sprint.IsInProgress() && stamina > 0 && !staminaRecharging;
     private bool ShouldCrouch => (playerControls.Player.Crouch.WasPressedThisFrame() || playerControls.Player.Crouch.WasReleasedThisFrame()) && !duringCrouchAnimation && characterController.isGrounded || (crouchCancelled && !duringCrouchAnimation);
 
@@ -58,6 +59,8 @@ public class NewPlayerMovement : MonoBehaviour
     [SerializeField] private bool isCrouching;
     [SerializeField] private GameObject tablet;
 
+    [Header("Menu Parameters")]
+    [SerializeField] private GameObject menu;
 
     public PlayerControls playerControls;
 
@@ -102,6 +105,7 @@ public class NewPlayerMovement : MonoBehaviour
             HandleMouseLook();
             HandleCrouch();
             HandleStamina();
+            HandleMenu();
 
             ApplyFinalMovements();
         }
@@ -124,6 +128,15 @@ public class NewPlayerMovement : MonoBehaviour
             {
                 crouchQueued = true;
             }
+        }
+    }
+
+    private void HandleMenu()
+    {
+        if (playerControls.Player.Menu.WasPressedThisFrame() || playerControls.UI.Menu.WasPressedThisFrame() && menu.GetComponent<Menu>().gameStarted)
+        {
+            isInMenu = !isInMenu;
+            menu.SetActive(!menu.activeSelf);
         }
     }
 
