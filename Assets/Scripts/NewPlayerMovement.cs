@@ -137,6 +137,16 @@ public class NewPlayerMovement : MonoBehaviour
         {
             isInMenu = !isInMenu;
             menu.SetActive(!menu.activeSelf);
+            if(isInMenu)
+            {
+                playerControls.Player.Disable();
+                playerControls.UI.Enable();
+            }
+            else
+            {
+                playerControls.UI.Disable();
+                playerControls.Player.Enable();
+            }
         }
     }
 
