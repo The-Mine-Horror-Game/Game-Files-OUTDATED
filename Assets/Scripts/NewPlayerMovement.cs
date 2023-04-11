@@ -15,7 +15,6 @@ public class NewPlayerMovement : MonoBehaviour
 
     public bool CanMove { get; private set; } = true;
     public bool isInTablet { get; private set; } = false;
-    public bool isInMenu { get; private set; } = false;
     private bool IsSprinting => canSprint && playerControls.Player.Sprint.IsInProgress() && stamina > 0 && !staminaRecharging;
     private bool ShouldCrouch => (playerControls.Player.Crouch.WasPressedThisFrame() || playerControls.Player.Crouch.WasReleasedThisFrame()) && !duringCrouchAnimation && characterController.isGrounded || (crouchCancelled && !duringCrouchAnimation);
 
@@ -61,6 +60,7 @@ public class NewPlayerMovement : MonoBehaviour
 
     [Header("Menu Parameters")]
     [SerializeField] private GameObject menu;
+    public bool isInMenu = false;
 
     public PlayerControls playerControls;
 
@@ -98,15 +98,20 @@ public class NewPlayerMovement : MonoBehaviour
 
     void Update()
     {
-        HandleTablet();
         if (CanMove)
         {
             HandleMovementInput();
-            HandleMouseLook();
+            if (!isInMenu)
+            {
+                HandleMouseLook();
+            }
             HandleCrouch();
             HandleStamina();
             HandleMenu();
-
+            if (!isInMenu)
+            {
+                HandleTablet();
+            }
             ApplyFinalMovements();
         }
     }
@@ -133,19 +138,27 @@ public class NewPlayerMovement : MonoBehaviour
 
     private void HandleMenu()
     {
-        if (playerControls.Player.Menu.WasPressedThisFrame() || playerControls.UI.Menu.WasPressedThisFrame() && menu.GetComponent<Menu>().gameStarted)
+        if (playerControls.Player.Menu.WasPressedThisFrame() || playerControls.UI.Menu.WasPressedThisFrame() && menu.GetComponent<Menu>().gameStarted || menu.GetComponent<Menu>().gameUnpaused)
         {
             isInMenu = !isInMenu;
-            menu.SetActive(!menu.activeSelf);
             if(isInMenu)
             {
                 playerControls.Player.Disable();
                 playerControls.UI.Enable();
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
             }
             else
             {
                 playerControls.UI.Disable();
                 playerControls.Player.Enable();
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+            menu.SetActive(!menu.activeSelf);
+            if (menu.GetComponent<Menu>().gameUnpaused)
+            {
+                menu.GetComponent<Menu>().gameUnpaused = false;
             }
         }
     }
@@ -156,20 +169,20 @@ public class NewPlayerMovement : MonoBehaviour
         {
             isInTablet = !isInTablet;
             tablet.SetActive(!tablet.activeSelf);
-        }
-        if (isInTablet)
-        {
-            playerControls.Tablet.Enable();
-            playerControls.Player.Disable();
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            playerControls.Tablet.Disable();
-            playerControls.Player.Enable();
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            if (isInTablet)
+            {
+                playerControls.Tablet.Enable();
+                playerControls.Player.Disable();
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                playerControls.Tablet.Disable();
+                playerControls.Player.Enable();
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
         
     }
@@ -184,7 +197,7 @@ public class NewPlayerMovement : MonoBehaviour
         currentInput.y *= isCrouching ? crouchSpeed : IsSprinting ? sprintSpeed : walkSpeed;
         
 
-        moveDirection = (transform.TransformDirection(Vector3.forward) * currentInput.y) + (transform.TransformDirection(Vector3.right) * currentInput.x);
+        moveDirection = (orientationObj.TransformDirection(Vector3.forward) * currentInput.y) + (orientationObj.TransformDirection(Vector3.right) * currentInput.x);
         moveDirection.y = moveDirectionY;
     }
 

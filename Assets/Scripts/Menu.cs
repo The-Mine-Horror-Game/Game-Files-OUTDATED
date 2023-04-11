@@ -9,13 +9,16 @@ public class Menu : MonoBehaviour
     [SerializeField] private GameObject menu;
     [SerializeField] private GameObject quit;
     [SerializeField] private GameObject start;
+    [SerializeField] private GameObject continueYEE;
+    [SerializeField] private GameObject menuCam;
     [SerializeField] private GameObject quitConfirmation;
     [SerializeField] private GameObject settings;
     [SerializeField] private GameObject back;
     [SerializeField] private GameObject movementObj;
-    [SerializeField] private GameObject menuCam;
-    [SerializeField] private PlayerControls playerControls;
+    public PlayerControls playerControls;
     [SerializeField] public bool gameStarted;
+    [SerializeField] public bool gameUnpaused;
+
 
     private void Start()
     {
@@ -23,15 +26,32 @@ public class Menu : MonoBehaviour
         //playerControls.Player.Disable();
         //playerControls.UI.Enable();
         menu.SetActive(true);
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
     public void StartGame()
     {
-        menu.SetActive(false);
+        start.SetActive(false);
+        continueYEE.SetActive(true);
         gameStarted = true;
         movementObj.SetActive(true);
         menuCam.SetActive(false);
+        menu.SetActive(false);
+    }
+
+    public void Back()
+    {
+        if(quitConfirmation.activeSelf)
+        {
+            QuitConfirmed();
+        }
+    }
+
+    public void Continue()
+    {
+        gameUnpaused = true;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     public void QuitCheck()
     {
@@ -40,6 +60,7 @@ public class Menu : MonoBehaviour
         //back.SetActive(false);
         quit.SetActive(false);
         start.SetActive(false);
+        continueYEE.SetActive(false);
         return;
     }
     public void QuitCancel()
@@ -50,6 +71,7 @@ public class Menu : MonoBehaviour
         quit.SetActive(true);
         return;
     }
+
     public void QuitConfirmed()
     {
         Application.Quit();
