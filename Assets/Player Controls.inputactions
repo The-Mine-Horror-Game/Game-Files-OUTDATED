@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "17d0a5c6-7bbd-4cbc-8315-af012decc190",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -212,6 +221,17 @@
                     "action": "Tablet",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c6939de8-7a06-401a-94b7-1421448cf7d5",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -220,7 +240,7 @@
             "id": "4f71b213-e861-4ce7-a151-64c80186fe38",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Menu",
                     "type": "Button",
                     "id": "ad50f3b1-fc89-4a2f-b386-679f6cb151e8",
                     "expectedControlType": "Button",
@@ -229,7 +249,19 @@
                     "initialStateCheck": false
                 }
             ],
-            "bindings": []
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "9383a160-087f-4d1b-b1e1-091e4b8254cb",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         },
         {
             "name": "Tablet",
