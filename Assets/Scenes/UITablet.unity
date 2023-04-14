@@ -1372,7 +1372,8 @@ MonoBehaviour:
   continueYEE: {fileID: 892542261}
   menuCam: {fileID: 1740002818}
   quitConfirmation: {fileID: 422769613}
-  settings: {fileID: 1355053792}
+  settingsButton: {fileID: 0}
+  settingsMenu: {fileID: 0}
   back: {fileID: 0}
   movementObj: {fileID: 1156371916}
   gameStarted: 0
@@ -3847,13 +3848,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 479824489}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 479824490}
+        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
+        m_MethodName: OpenSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

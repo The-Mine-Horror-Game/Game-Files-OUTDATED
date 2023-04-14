@@ -12,7 +12,9 @@ public class Menu : MonoBehaviour
     [SerializeField] private GameObject continueYEE;
     [SerializeField] private GameObject menuCam;
     [SerializeField] private GameObject quitConfirmation;
-    [SerializeField] private GameObject settings;
+    [SerializeField] private GameObject settingsButton;
+    [SerializeField] private GameObject settingsMenu;
+
     [SerializeField] private GameObject back;
     [SerializeField] private GameObject movementObj;
     public PlayerControls playerControls;
@@ -41,9 +43,13 @@ public class Menu : MonoBehaviour
 
     public void Back()
     {
-        if(quitConfirmation.activeSelf)
+        if (quitConfirmation.activeSelf)
         {
-            QuitConfirmed();
+            QuitCancel();
+        }
+        else if (settingsButton.activeSelf)
+        {
+            CloseSettings();
         }
     }
 
@@ -56,7 +62,7 @@ public class Menu : MonoBehaviour
     public void QuitCheck()
     {
         quitConfirmation.SetActive(true);
-        settings.SetActive(false);
+        settingsButton.SetActive(false);
         //back.SetActive(false);
         quit.SetActive(false);
         start.SetActive(false);
@@ -66,10 +72,20 @@ public class Menu : MonoBehaviour
     public void QuitCancel()
     {
         quitConfirmation.SetActive(false);
-        settings.SetActive(true);
+        settingsButton.SetActive(true);
         back.SetActive(true);
         quit.SetActive(true);
         return;
+    }
+
+    public void OpenSettings()
+    {
+        settingsMenu.SetActive(true);
+    }
+
+    public void CloseSettings()
+    {
+        settingsMenu.SetActive(false);
     }
 
     public void QuitConfirmed()
