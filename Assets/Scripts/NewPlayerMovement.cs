@@ -341,6 +341,7 @@ public class NewPlayerMovement : MonoBehaviour
         }
     }
 
+    // "Applies" the movements to the character controller using the .Move function
     private void ApplyFinalMovements()
     {
         if(!characterController.isGrounded)
@@ -350,25 +351,27 @@ public class NewPlayerMovement : MonoBehaviour
         characterController.Move(moveDirection * Time.deltaTime);
     }
 
+
+    // Goes from one crouch state to another smoothly.
     private IEnumerator CrouchStand()
     {
         duringCrouchAnimation = true;
 
+        // Sets the values needed based on whether the player is currently crouching or not.
         float timeElapsed = 0;
         float targetHeight = isCrouching ? standingHeight : crouchHeight;
         float currentHeight = characterController.height;
         Vector3 targetCenter = isCrouching ? standingCenter : crouchingCenter;
         Vector3 currentCenter = characterController.center;
         Vector3 cameraCurrentPosition = playerCamera.transform.position;
-
         Vector3 targetPosition = isCrouching ? new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y + 0.5f, playerCamera.transform.position.z) : new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y - 0.5f, playerCamera.transform.position.z);
         
         while (timeElapsed < timeToCrouch)
         {
             cameraCurrentPosition = new Vector3(transform.position.x, targetPosition.y, transform.position.z);
-            //targetPosition = isCrouching ? new Vector3(playerCamera.)
 
             
+            // Resets the target values to the standing values, and the time elapsed to the opposite.
             if ((!isCrouching) && (!playerControls.Player.Crouch.IsPressed()))
             {
                 currentHeight = characterController.height;
@@ -380,25 +383,21 @@ public class NewPlayerMovement : MonoBehaviour
                 crouchCancelled = true;
             }
 
+            // Actually moves the player and adds the elapsed time.
             characterController.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / timeToCrouch);
             characterController.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed / timeToCrouch);
-            //playerCamera.transform.position = Vector3.Lerp(cameraCurrentPosition, targetPosition, timeElapsed / timeToCrouch);
-
-            //characterController.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed / timeToCrouch);
-            //characterController.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed / timeToCrouch);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
         
         isCrouching = !isCrouching;
-        crouchCancelled = false;
+        crouchCancelled = false; // Prevents infinite loops
         
-        //playerCamera.transform.position = isCrouching ? new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y + 0.5f, playerCamera.transform.position.z) : new Vector3(playerCamera.transform.position.x, playerCamera.transform.position.y - 0.5f, playerCamera.transform.position.z);
-
+        // Ensures that the final heights are exactly the right number (Ex: 5.0000 instead of 5.0001221032 or wtv)
         characterController.height = targetHeight;
         characterController.center = targetCenter;
 
-        crouchQueued = false;
+        crouchQueued = false; // Also prevents infinite loops
         duringCrouchAnimation = false;
     }
 }
