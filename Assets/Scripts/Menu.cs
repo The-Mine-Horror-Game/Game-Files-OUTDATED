@@ -16,7 +16,7 @@ public class Menu : MonoBehaviour
     [SerializeField] private GameObject settingsMenu;
 
     [SerializeField] private GameObject back;
-    [SerializeField] private GameObject movementObj;
+    [SerializeField] private GameObject firstPersonController;
     public PlayerControls playerControls;
     [SerializeField] public bool gameStarted;
     [SerializeField] public bool gameUnpaused;
@@ -24,7 +24,7 @@ public class Menu : MonoBehaviour
 
     private void Start()
     {
-        playerControls = movementObj.GetComponent<NewPlayerMovement>().playerControls;
+        playerControls = firstPersonController.GetComponent<NewPlayerMovement>().playerControls;
         //playerControls.Player.Disable();
         //playerControls.UI.Enable();
         menu.SetActive(true);
@@ -36,7 +36,7 @@ public class Menu : MonoBehaviour
         start.SetActive(false);
         continueYEE.SetActive(true);
         gameStarted = true;
-        movementObj.SetActive(true);
+        firstPersonController.SetActive(true);
         menuCam.SetActive(false);
         menu.SetActive(false);
     }
@@ -63,7 +63,7 @@ public class Menu : MonoBehaviour
     {
         quitConfirmation.SetActive(true);
         settingsButton.SetActive(false);
-        //back.SetActive(false);
+        back.SetActive(false);
         quit.SetActive(false);
         start.SetActive(false);
         continueYEE.SetActive(false);

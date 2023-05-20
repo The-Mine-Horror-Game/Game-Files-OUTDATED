@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/tempScene.unity
     guid: 0b83b69392b7d314694d5780dccceae3
-  - enabled: 1
-    path: Assets/Scenes/Player.unity
-    guid: fd3cbf911863a5f4fac65aeadea8fc2d
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}
