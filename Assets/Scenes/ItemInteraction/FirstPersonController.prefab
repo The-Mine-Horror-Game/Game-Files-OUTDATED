@@ -1186,7 +1186,7 @@ GameObject:
   - component: {fileID: 108808333396944643}
   m_Layer: 6
   m_Name: PlayerCamera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1647,7 +1647,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 21a777695bccd894d88f4439134437fa, type: 2}
+  - {fileID: 2100000, guid: 145bf075356749345bb5af2ce00f45ea, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1842,7 +1842,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6ea429c8d7ef7054dbe28f5b6a2ae24e, type: 2}
+  - {fileID: 2100000, guid: 2808f8247c54f9c4f8d1b7b70dccee7b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1951,7 +1951,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 0c3039a9721a88f4cab6ba1e8bd028de, type: 3}
+  m_Texture: {fileID: 2800000, guid: 8ddfe75748bc3b3468c13c30b042cdd4, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
