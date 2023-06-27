@@ -3007,6 +3007,10 @@ PrefabInstance:
       propertyPath: movementObj
       value: 
       objectReference: {fileID: 1156371916}
+    - target: {fileID: 4145323212225638289, guid: 717f0e2bdb831404f99fe2fba6bb3077, type: 3}
+      propertyPath: firstPersonController
+      value: 
+      objectReference: {fileID: 1156371916}
     - target: {fileID: 4319930399989909259, guid: 717f0e2bdb831404f99fe2fba6bb3077, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

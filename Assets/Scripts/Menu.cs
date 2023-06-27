@@ -24,7 +24,8 @@ public class Menu : MonoBehaviour
 
     private void Start()
     {
-        playerControls = firstPersonController.GetComponent<NewPlayerMovement>().playerControls;
+        //playerControls = firstPersonController.GetComponent<NewPlayerMovement>().playerControls;
+        playerControls = new PlayerControls();
         //playerControls.Player.Disable();
         //playerControls.UI.Enable();
         menu.SetActive(true);
